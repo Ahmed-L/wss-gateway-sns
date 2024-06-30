@@ -18,13 +18,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
-	//topicARN := os.Getenv("SNS_TOPIC_ARN")
-	//endpoint := os.Getenv("SNS_NOTIFICATION_ENDPOINT")
 	router := gin.Default()
 	snsHandler := aws.NewSNSHandler()
 	setupRoutes(router, snsHandler)
-	//setupSnsSubscription(snsHandler, topicARN, endpoint)
-	port := ":8080"
+	//setupSnsSubscription(snsHandler, os.Getenv("SNS_TOPIC_ARN"), os.Getenv("SNS_NOTIFICATION_ENDPOINT")) // for local testing only
+	port := os.Getenv("PORT")
 	fmt.Printf("Starting WebSocket Gateway Server on port %s\n", port)
 
 	go handleSignals()

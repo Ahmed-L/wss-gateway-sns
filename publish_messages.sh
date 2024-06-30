@@ -1,17 +1,24 @@
 #!/bin/bash
 
-# Replace with your SNS topic ARN in LocalStack
-sns_topic_arn="arn:aws:sns:us-east-1:000000000000:my-topic"
+# LocalStack endpoint and AWS region
+ENDPOINT_URL="http://localhost:4566"
+AWS_REGION="us-east-1"  # LocalStack uses a default region
 
-# Loop to publish messages every 0.5 seconds for 5 seconds
-for ((i=0; i<10; i++)); do
-    message="Message $i from Bash script"
+# SNS Topic ARN (replace with your topic ARN)
+SNS_TOPIC_ARN="arn:aws:sns:us-east-1:000000000000:sample-topic"
 
-    # Publish message to SNS using AWS CLI
-    aws sns publish --topic-arn $sns_topic_arn --message "$message"
+# JSON message data
+JSON_DATA='{
+  "message": "Hello from Bash script!",
+  "username": "john_doe",
+  "trx_id": "abc123",
+  "property": "additional_field_value"
+}'
 
-    echo "Published: $message"
 
-    # Sleep for 0.5 seconds
-    sleep 0.5
-done
+# Publish message to SNS topic using awslocal CLI
+awslocal sns publish \
+    --topic-arn $SNS_TOPIC_ARN \
+    --message "$JSON_DATA" \
+    --endpoint-url $ENDPOINT_URL \
+    --region $AWS_REGION
